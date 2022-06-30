@@ -3,12 +3,22 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 
-describe('backend-express-template routes', () => {
+const mockUser = {
+  email: 'blue@yahoo.com',
+  password: '1234567',
+};
+
+describe('user routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  it('example test - delete me!', () => {
-    expect(1).toEqual(1);
+  it('POST creates new user', async () => {
+    const resp = await request(app).post('api/1/users').send(mockUser);
+    const { email } = mockUser;
+    expect(resp.body).toEqual({
+      id: expect.any(String),
+      email,
+    });
   });
   afterAll(() => {
     pool.end();
