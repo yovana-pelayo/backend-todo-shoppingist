@@ -5,7 +5,7 @@ const app = require('../lib/app');
 
 const mockUser = {
   email: 'blue@yahoo.com',
-  password: '1234567',
+  password: '123456',
 };
 
 describe('user routes', () => {
@@ -13,9 +13,10 @@ describe('user routes', () => {
     return setup(pool);
   });
   it('POST creates new user', async () => {
-    const resp = await request(app).post('api/1/users').send(mockUser);
+    const res = await request(app).post('/api/v1/users').send(mockUser);
     const { email } = mockUser;
-    expect(resp.body).toEqual({
+   
+    expect(res.body).toEqual({
       id: expect.any(String),
       email,
     });
