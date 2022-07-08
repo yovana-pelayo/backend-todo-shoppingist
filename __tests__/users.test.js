@@ -21,16 +21,7 @@ describe('user routes', () => {
       email,
     });
   });
-  it('POST /sessions logs in new user and creates a cookie', async () => {
-    await UserService.create(mockUser);
-    const { email, password } = mockUser;
-    const res = await request(app)
-      .post('/api/v1/users/sessions')
-      .send({ email, password });
-    console.log(res.body);
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ message: 'Signed in successfully!' });
-  });
+ 
   afterAll(() => {
     pool.end();
   });

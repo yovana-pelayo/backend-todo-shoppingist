@@ -2,9 +2,9 @@
 -- The SQL in this file will be executed when you run `npm run setup-db`
 
 
-DROP TABLE IF EXISTS usersSL;
+DROP TABLE IF EXISTS userSL;
 
-CREATE TABLE usersSL (
+CREATE TABLE userSL (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR NOT NULL UNIQUE,
     passwordHash VARCHAR NOT NULL
