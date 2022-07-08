@@ -21,7 +21,11 @@ describe('user routes', () => {
       email,
     });
   });
- 
+  it.only('signs in an existing user', async () => {
+    await request(app).post('/api/v1/users').send(mockUser);
+    const res = await request(app).post('/api/v1/users/sessions').send({ email: 'blue@yahoo.com', password: '123456' });
+    expect(res.status).toEqual(200);
+  });
   afterAll(() => {
     pool.end();
   });
