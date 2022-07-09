@@ -40,7 +40,7 @@ describe('user routes', () => {
     await request(app).post('/api/v1/users').send(mockUser);
     const res = await request(app)
       .post('/api/v1/users/sessions')
-      .send({ email: 'blue@example.com', password: '123456' });
+      .send({ email: 'kyle@example.com', password: '123456' });
     expect(res.status).toEqual(200);
   });
   afterAll(() => {
