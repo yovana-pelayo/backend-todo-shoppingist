@@ -70,7 +70,7 @@ describe('todos routes', () => {
     expect(resp.status).toBe(403);
   });
 
-  it('Put /api/v1/todos/:id should update a todo', async () => {
+  it('Put /api/v1/todos/:id should update a todo by authorized user!', async () => {
     const [agent, user] = await registerAndLogin();
     const todo = await Todo.insert({
       description: 'return 2 library books',
