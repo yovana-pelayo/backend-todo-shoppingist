@@ -4,9 +4,10 @@ const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
 
+
 const mockUser = {
-  email: 'blue@yahoo.com',
-  password: '123456',
+  email: 'neo@yahoo.com', 
+  password: 'whiterabbit'
 };
 
 const registerAndLogin = async (userProps = {}) => {
@@ -15,38 +16,29 @@ const registerAndLogin = async (userProps = {}) => {
   const agent = request.agent(app);
 
   const user = await UserService.create({ ...mockUser, ...userProps });
+
   const { email } = user;
   await agent.post('/api/v1/users/sessions').send({ email, password });
   return [agent, user];
 };
-
-
-// agent allows token to be stored 
-describe('user routes', () => {
+describe('items routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
-  it('creates new user', async () => {
-    const res = await request(app).post('/api/v1/users').send(mockUser);
-    const { email } = mockUser;
-    expect(res.body).toEqual({
-      id: expect.any(String),
-      email
-    });
-  });
-
-
-  it('signs in an existing user', async () => {
+  
+  it('POST /api/v1/items creates a new shopping item with the current user', async () => {
     const [agent, user] = await registerAndLogin();
-    const me = await agent.get('/api/v1/users/me');
-    expect(me.body).toEqual({
-      ...user,
-      exp: expect.any(Number),
-      iat: expect.any(Number),
+    const newTodo = { description: 'coffee beans' };
+    const resp = await agent.post('/api/v1/todos').send(newTodo);
+    expect(resp.status).toEqual(200);
+    expect(resp.body).toEqual({
+      id: expect.any(String),
+      description: newTodo.description,
+      user_id: user.id,
+      complete: false,
     });
   });
   afterAll(() => {
     pool.end();
   });
 });
-
