@@ -21,7 +21,7 @@ const registerAndLogin = async (userProps = {}) => {
   await agent.post('/api/v1/users/sessions').send({ email, password });
   return [agent, user];
 };
-describe('items routes', () => {
+describe('todos routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
