@@ -43,7 +43,7 @@ describe('todos routes', () => {
       complete: false,
     });
   });
-  it.only('GET  /api/v1/todos returns all todos with authenticated user', async () => {
+  it('GET  /api/v1/todos returns all todos with authenticated user', async () => {
     const [agent, user] = await registerAndLogin();
 
     const user2 = await UserService.create(mockUser2);
@@ -58,6 +58,27 @@ describe('todos routes', () => {
     const resp = await agent.get('/api/v1/todos');
     expect(resp.status).toEqual(200);
     expect(resp.body).toEqual([userTodo]);
+  });
+  it('UPDATE /api/v1/todos/:id updates a todo if associated with authenticated user, 403 for invalid users', async () => {
+    const [agent] = await registerAndLogin();
+    const user2 = await UserService.create(mockUser2);
+    const todo = await Todo.insert({
+      description: 'write out 100 JavaScript note cards',
+      user_id: user2.id,
+    });
+    const resp = await agent.put(`/api/v1/todos/${todo.id}`).send({ complete: true });
+    expect(resp.status).toBe(403);
+  });
+
+  it('Put /api/v1/todos/:id should update a todo', async () => {
+    const [agent, user] = await registerAndLogin();
+    const todo = await Todo.insert({
+      description: 'return 2 library books',
+      user_id: user.id,
+    });
+    const resp = await agent.put(`/api/v1/todos/${todo.id}`).send({ complete: true });
+    expect(resp.status).toBe(200);
+    expect(resp.body).toEqual({ ...todo, complete:true });
   });
   afterAll(() => {
     pool.end();
