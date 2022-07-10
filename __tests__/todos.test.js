@@ -80,6 +80,19 @@ describe('todos routes', () => {
     expect(resp.status).toBe(200);
     expect(resp.body).toEqual({ ...todo, complete:true });
   });
+  it.only('DELETE api/v1/todos/:id deletes a todo by authorized user', async () => {
+    const [agent, user] = await registerAndLogin();
+    const todo = await Todo.insert({
+      description: 'finish career service assignment',
+      user_id: user.id,
+    });
+
+    const resp = await agent.delete(`/api/v1/todos/${todo.id}`);
+    expect(resp.status).toBe(200);
+
+    const check = await Todo.getById(todo.id);
+    expect(check).toBeNull();
+  });
   afterAll(() => {
     pool.end();
   });
