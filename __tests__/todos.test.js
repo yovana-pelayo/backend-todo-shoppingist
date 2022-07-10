@@ -80,7 +80,7 @@ describe('todos routes', () => {
     expect(resp.status).toBe(200);
     expect(resp.body).toEqual({ ...todo, complete:true });
   });
-  it.only('DELETE api/v1/todos/:id deletes a todo by authorized user', async () => {
+  it('DELETE api/v1/todos/:id deletes a todo by authorized user', async () => {
     const [agent, user] = await registerAndLogin();
     const todo = await Todo.insert({
       description: 'finish career service assignment',
