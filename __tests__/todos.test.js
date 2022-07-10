@@ -59,7 +59,7 @@ describe('todos routes', () => {
     expect(resp.status).toEqual(200);
     expect(resp.body).toEqual([userTodo]);
   });
-  it('UPDATE /api/v1/todos/:id updates a todo if associated with authenticated user, 403 for invalid users', async () => {
+  it('UPDATE /api/v1/todos/:id updates a todo if associated with authenticated user, 403 for invalid users!!', async () => {
     const [agent] = await registerAndLogin();
     const user2 = await UserService.create(mockUser2);
     const todo = await Todo.insert({
