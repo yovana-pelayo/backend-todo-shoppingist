@@ -3,11 +3,16 @@ const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
 const UserService = require('../lib/services/UserService');
+const Todo = require('../lib/models/Todo');
 
 
 const mockUser = {
   email: 'neo@yahoo.com', 
   password: 'whiterabbit'
+};
+const mockUser2 = {
+  email: 'trinity@yahoo.com', 
+  password: 'neothechosenone'
 };
 
 const registerAndLogin = async (userProps = {}) => {
@@ -26,7 +31,7 @@ describe('todos routes', () => {
     return setup(pool);
   });
   
-  it('POST /api/v1/items creates a new shopping item with the current user', async () => {
+  it('POST /api/v1/todos creates a new shopping item with the current user', async () => {
     const [agent, user] = await registerAndLogin();
     const newTodo = { description: 'coffee beans' };
     const resp = await agent.post('/api/v1/todos').send(newTodo);
@@ -37,6 +42,22 @@ describe('todos routes', () => {
       user_id: user.id,
       complete: false,
     });
+  });
+  it.only('GET  /api/v1/todos returns all todos with authenticated user', async () => {
+    const [agent, user] = await registerAndLogin();
+
+    const user2 = await UserService.create(mockUser2);
+    const userTodo = await Todo.insert({
+      description: 'trash bags',
+      user_id: user.id,
+    });
+    await Todo.insert({
+      description: 'return library book',
+      user_id: user2.id,
+    });
+    const resp = await agent.get('/api/v1/todos');
+    expect(resp.status).toEqual(200);
+    expect(resp.body).toEqual([userTodo]);
   });
   afterAll(() => {
     pool.end();
